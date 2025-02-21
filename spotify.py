@@ -48,7 +48,7 @@ def open_web():
   # Get the title of the current window
   web_window = gw.getActiveWindow()
   window_title = web_window.title
-  print(f"Native window title: {window_title}")
+  print(f"Web window title: {window_title}")
 
   # Ensure that the window is maximized and focused
   window = get_window_by_title(window_title)
@@ -66,16 +66,17 @@ def focus(title):
 
 # Function to play a song on Spotify
 # Note: This assumes, that spotify is already open and focused
-def play_song(name: str, is_web: bool = False):
+def play_song(name: str):
   # Open search bar
   pyautogui.hotkey('ctrl', 'k')
 
+  time.sleep(1)
+
   # In Chrome, the search bar will be focused when using CTRL+k, so use CTRL+F6 to focus on page again
-  if is_web:
-    pyautogui.hotkey('ctrl', 'f6')
+  pyautogui.hotkey('ctrl', 'f6')
 
   # Wait for a few seconds
-  time.sleep(2)
+  time.sleep(1)
 
   # Type the song name
   pyautogui.typewrite(name)
@@ -91,6 +92,8 @@ def play_song(name: str, is_web: bool = False):
 
   # Close the search bar
   pyautogui.hotkey('esc')
+
+  print("Playing song: ", name)
 
 # Function to pause the current song
 # Note: This assumes, that spotify is already open and focused and a song is currently playing

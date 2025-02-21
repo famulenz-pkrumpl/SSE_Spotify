@@ -20,7 +20,7 @@ time.sleep(1)
 # Focus the web Spotify app
 spotify.focus(spotify_web)
 time.sleep(1)
-spotify.play_song("Never gonna give you up", True)
+spotify.play_song("Never gonna give you up")
 time.sleep(10)
 spotify.pause_song()
 time.sleep(1)
