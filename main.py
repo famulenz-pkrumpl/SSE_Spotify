@@ -13,11 +13,25 @@ load_dotenv()
 
 VOLUME = float(os.getenv("VOLUME", 0.2))
 BRIGHTNESS = int(os.getenv("BRIGHTNESS", 50))
+import random
 
+# Constants
+WEB = 0
+NATIVE = 1
+
+# Handles for spotify web an native windows
 
 # Handles for spotify web a native windows
 spotify_web = None
 spotify_native = None
+def get_player(player):
+  if player == WEB:
+    return spotify_web
+  elif player == NATIVE:
+    return spotify_native
+  else:
+    print("Unknown player ", player)
+    raise Exception("Unknown player")
 
 
 def unmute_and_set_volume(level):
@@ -39,6 +53,8 @@ def set_brightness(level):
 def init():
   # TODO: maybe adapt any energy settings for the PC automatically
 
+  print("Start initialization")
+
   # Set volume and brightness of the system
   unmute_and_set_volume(VOLUME)
   set_brightness(BRIGHTNESS)
@@ -46,12 +62,14 @@ def init():
   # Open Spotify native
   global spotify_native
   spotify_native = spotify.open_native()
-  time.sleep(5)
+  time.sleep(3)
 
   # Open Spotify web
   global spotify_web
   spotify_web = spotify.open_web()
-  time.sleep(5)
+  time.sleep(3)
+
+  print("Initialization completed")
 
   # TODO: initialize EnergiBridge  # Create monitoring service
   record.setup_service()
@@ -84,34 +102,87 @@ def warm_up():
 
 # Run the experiment
 def run_experiment():
-  # TODO: implement experiment run
+  # Variables to adapt the experiment
+  plays_per_song = 3          # Number of times each song is played
+  song_play_duration = 60     # The duration a song is played in seconds
+  pause_after_song = 60       # The pause between two songs in seconds
 
+  experiment_start_time = time.time()
+  time.sleep(1)
+
+  # List of songs to play
   songs = [
-    "Never Gonna Give You Up",
-    "Take On Me"
+    "Never gonna give you up",
+    "Darude Sandstorm",
+    "Summer of 69",
+    "Dancing Queen",
+    "Dont stop me now",
+    "Im still standing",
+    "Take on me",
+    "Lose yourself",
+    "Its my life",
+    "Toto Africa"
   ]
 
-  for i, song in enumerate(songs):
-    output_file_name = f"experiment_{i}.csv"
+  # Keep track of the plays of the songs in web and native
+  plays = {
+    WEB: [0] * len(songs),
+    NATIVE: [0] * len(songs)
+  }
 
-    print(f"Running experiment for song: {song}")
-    process = record.run_energibridge(output_file_name, 20)
+  # Run the experiment
+  # The songs and the active player are shuffeled randomly
+  for i in range(len(songs) * plays_per_song * 2):
+    print("Starting experiment num #", str(i+1))
 
-    # Focus the native Spotify app
-    spotify.focus(spotify_native)
+    # Randomly select a song and player
+    selected_song = None
+    while selected_song is None:
+      # Randomly select the active player
+      active_player = random.choice([WEB, NATIVE])
+
+      # Randomly select a song
+      song = random.choice(songs)
+      song_index = songs.index(song)
+
+      # Check if the song can be played
+      if plays[active_player][song_index] < plays_per_song:
+        selected_song = song
+        plays[active_player][song_index] += 1
+        print("Active player: ", get_player(active_player))
+        print("Playing song: ", selected_song)
+        print("New play count: ", plays[active_player][song_index])
+
+    # TODO: start EnergiBridge for experiment i and active_player
+
+    # Play the selected song
+    spotify.focus(get_player(active_player))
     time.sleep(1)
-    spotify.play_song(song)
-    time.sleep(10)
+    spotify.play_song(selected_song)
+    time.sleep(song_play_duration)
     spotify.pause_song()
     time.sleep(1)
 
-    process.wait()
-  
+    # TODO: Stop EnergiBridge
+    print("Starting pause ...")
+    # TODO: Start EnerguBridge pause measurement
+
+    # Pause
+    time.sleep(pause_after_song)
+
+    print("Experiment #", str(i+1), " completed\n")
+
+  experiment_duration = time.time() - experiment_start_time
+  print("===============================================")
+  print("Experiment completed in ", experiment_duration, " seconds")
+  print("Plays: ", plays)
+  print("===============================================")
+
   return
 
 
 # Start the procedure
-#warm_up()
+warm_up()
 init()
 run_experiment()
 

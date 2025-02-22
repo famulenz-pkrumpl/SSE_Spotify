@@ -18,14 +18,15 @@ def get_window_by_title(title):
     if window.title == title:
       return window
   
-  raise Exception("Window with title ", title, " not found")
+  print("Window with title ", title, " not found")
+  raise Exception("Window not found")
 
 # Function to open Spotify app and return the PID of the process
 def open_native():
   # Open Spotify app
   process = subprocess.Popen(['spotify'])
 
-  time.sleep(2)
+  time.sleep(7)
 
   # Get the title of the current window
   native_window = gw.getActiveWindow()
@@ -43,7 +44,7 @@ def open_web():
   # Open the chrome browser and navigate to Spotify in a new window
   webbrowser.open_new('https://open.spotify.com')
 
-  time.sleep(2)
+  time.sleep(7)
 
   # Get the title of the current window
   web_window = gw.getActiveWindow()
@@ -60,8 +61,6 @@ def open_web():
 def focus(title):
   # Get the window by title
   window = get_window_by_title(title)
-  print("Focusing window with title: ", window.title)
-  print("Window: ", window)
   window.activate()
 
 # Function to play a song on Spotify
@@ -88,12 +87,10 @@ def play_song(name: str):
   pyautogui.hotkey('shift', 'enter')
 
   # Wait for a few seconds
-  time.sleep(1)
+  time.sleep(2)
 
   # Close the search bar
   pyautogui.hotkey('esc')
-
-  print("Playing song: ", name)
 
 # Function to pause the current song
 # Note: This assumes, that spotify is already open and focused and a song is currently playing
