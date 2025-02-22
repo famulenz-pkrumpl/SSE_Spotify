@@ -1,23 +1,40 @@
 import time
 import spotify
+import random
 
-# Hndles for spotify web an native windows
+# Constants
+WEB = 0
+NATIVE = 1
+
+# Handles for spotify web an native windows
 spotify_web = None
 spotify_native = None
+def get_player(player):
+  if player == WEB:
+    return spotify_web
+  elif player == NATIVE:
+    return spotify_native
+  else:
+    print("Unknown player ", player)
+    raise Exception("Unknown player")
 
 # Initialize the experiment
 def init():
   # TODO: maybe adapt any energy settings for the PC automatically
 
+  print("Start initialization")
+
   # Open Spotify native
   global spotify_native
   spotify_native = spotify.open_native()
-  time.sleep(5)
+  time.sleep(3)
 
   # Open Spotify web
   global spotify_web
   spotify_web = spotify.open_web()
-  time.sleep(5)
+  time.sleep(3)
+
+  print("Initialization completed")
 
   # TODO: initialize EnergiBridge
 
@@ -49,15 +66,82 @@ def warm_up():
 
 # Run the experiment
 def run_experiment():
-  # TODO: implement experiment run
-  # Focus the native Spotify app
-  spotify.focus(spotify_native)
+  # Variables to adapt the experiment
+  plays_per_song = 3          # Number of times each song is played
+  song_play_duration = 60     # The duration a song is played in seconds
+  pause_after_song = 60       # The pause between two songs in seconds
+
+  experiment_start_time = time.time()
   time.sleep(1)
-  spotify.play_song("Never gonna give you up")
-  time.sleep(10)
-  spotify.pause_song()
-  time.sleep(1)
+
+  # List of songs to play
+  songs = [
+    "Never gonna give you up",
+    "Darude Sandstorm",
+    "Summer of 69",
+    "Dancing Queen",
+    "Dont stop me now",
+    "Im still standing",
+    "Take on me",
+    "Lose yourself",
+    "Its my life",
+    "Toto Africa"
+  ]
+
+  # Keep track of the plays of the songs in web and native
+  plays = {
+    WEB: [0] * len(songs),
+    NATIVE: [0] * len(songs)
+  }
   
+  # Run the experiment
+  # The songs and the active player are shuffeled randomly
+  for i in range(len(songs) * plays_per_song * 2):
+    print("Starting experiment num #", str(i+1))
+
+    # Randomly select a song and player
+    selected_song = None
+    while selected_song is None:
+      # Randomly select the active player
+      active_player = random.choice([WEB, NATIVE])
+
+      # Randomly select a song
+      song = random.choice(songs)
+      song_index = songs.index(song)
+
+      # Check if the song can be played
+      if plays[active_player][song_index] < plays_per_song:
+        selected_song = song
+        plays[active_player][song_index] += 1
+        print("Active player: ", get_player(active_player))
+        print("Playing song: ", selected_song)
+        print("New play count: ", plays[active_player][song_index])
+
+    # TODO: start EnergiBridge for experiment i and active_player
+
+    # Play the selected song
+    spotify.focus(get_player(active_player))
+    time.sleep(1)
+    spotify.play_song(selected_song)
+    time.sleep(song_play_duration)
+    spotify.pause_song()
+    time.sleep(1)
+
+    # TODO: Stop EnergiBridge
+    print("Starting pause ...")
+    # TODO: Start EnerguBridge pause measurement
+
+    # Pause
+    time.sleep(pause_after_song)
+
+    print("Experiment #", str(i+1), " completed\n")
+
+  experiment_duration = time.time() - experiment_start_time
+  print("===============================================")
+  print("Experiment completed in ", experiment_duration, " seconds")
+  print("Plays: ", plays)
+  print("===============================================")
+
   return
 
 
