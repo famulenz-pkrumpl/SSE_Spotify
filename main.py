@@ -153,11 +153,7 @@ def run_experiment():
 
     # Starting energibridge for the experiment
     output_file_name = f"experiment_{i+1}_{"web" if active_player == WEB else "native"}.csv"
-    process = record.run_energibridge(output_file_name, energibridge_duration)
-
-    print(active_player)
-    if (active_player == WEB):
-      print("web")
+    experiment_process = record.run_energibridge(output_file_name, energibridge_duration)
 
     # Play the selected song
     spotify.focus(get_player(active_player))
@@ -168,19 +164,19 @@ def run_experiment():
     time.sleep(1)
 
     # Wait for energibridge experiment
-    process.wait()
+    experiment_process.wait()
 
     print("Starting pause ...")
 
     # Starting energibridge for the pause
     output_file_name = f"pause_{i+1}.csv"
-    process = record.run_energibridge(output_file_name, pause_after_song)
+    pause_process = record.run_energibridge(output_file_name, pause_after_song)
 
     # Pause
     time.sleep(pause_after_song)
 
     # Wait for energibridge pause
-    process.wait()
+    pause_process.wait()
 
     print("Experiment #", str(i+1), " completed\n")
 

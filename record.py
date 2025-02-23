@@ -44,12 +44,6 @@ def setup_service():
 def run_energibridge(output_file_name, timeout_in_seconds):
     print("Starting EnergiBridge...")
     result = subprocess.Popen([ENERGIBRIDGE_PATH, "-o", CSV_OUTPUT_DIR_PATH + output_file_name, "--summary", "timeout", str(timeout_in_seconds)], shell=True)
-
-    if result.returncode == 0:
-        print(f"Finished EnergiBridge execution, results are in: '{CSV_OUTPUT_DIR_PATH}'")
-    else:
-        print("Error executing EnergiBridge")
-
     return result
 
 
