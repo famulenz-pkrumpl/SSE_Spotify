@@ -1,6 +1,7 @@
 import os
 import time
 
+import random
 import record
 import spotify
 import screen_brightness_control as sbc
@@ -13,13 +14,10 @@ load_dotenv()
 
 VOLUME = float(os.getenv("VOLUME", 0.2))
 BRIGHTNESS = int(os.getenv("BRIGHTNESS", 50))
-import random
 
 # Constants
 WEB = 0
 NATIVE = 1
-
-# Handles for spotify web an native windows
 
 # Handles for spotify web a native windows
 spotify_web = None
@@ -51,8 +49,6 @@ def set_brightness(level):
 
 # Initialize the experiment
 def init():
-  # TODO: maybe adapt any energy settings for the PC automatically
-
   print("Start initialization")
 
   # Set volume and brightness of the system
@@ -69,10 +65,11 @@ def init():
   spotify_web = spotify.open_web()
   time.sleep(3)
 
+  # Create monitoring service
+  record.setup_service()
+
   print("Initialization completed")
 
-  # TODO: initialize EnergiBridge  # Create monitoring service
-  record.setup_service()
 
 # Simple implementation of the fibonacci sequence used for warm up
 def fibonacci(n):
@@ -82,7 +79,7 @@ def fibonacci(n):
     return fibonacci(n-1) + fibonacci(n-2)
 
 # Do some warm up before actually running the experiment
-# The warm up is done by running a CPU intensive task (fibonacci)
+# The warm-up is done by running a CPU intensive task (fibonacci)
 def warm_up():
   print("Start warm up")
   # Warm up for 1 minute
@@ -103,9 +100,10 @@ def warm_up():
 # Run the experiment
 def run_experiment():
   # Variables to adapt the experiment
-  plays_per_song = 3          # Number of times each song is played
-  song_play_duration = 60     # The duration a song is played in seconds
-  pause_after_song = 60       # The pause between two songs in seconds
+  plays_per_song = 1          # Number of times each song is played
+  song_play_duration = 5     # The duration a song is played in seconds
+  pause_after_song = 5       # The pause between two songs in seconds
+  energibridge_duration = song_play_duration + 2  # Extra time because of sleeps
 
   experiment_start_time = time.time()
   time.sleep(1)
@@ -131,7 +129,7 @@ def run_experiment():
   }
 
   # Run the experiment
-  # The songs and the active player are shuffeled randomly
+  # The songs and the active player are shuffled randomly
   for i in range(len(songs) * plays_per_song * 2):
     print("Starting experiment num #", str(i+1))
 
@@ -153,7 +151,13 @@ def run_experiment():
         print("Playing song: ", selected_song)
         print("New play count: ", plays[active_player][song_index])
 
-    # TODO: start EnergiBridge for experiment i and active_player
+    # Starting energibridge for the experiment
+    output_file_name = f"experiment_{i+1}_{"web" if active_player == WEB else "native"}.csv"
+    process = record.run_energibridge(output_file_name, energibridge_duration)
+
+    print(active_player)
+    if (active_player == WEB):
+      print("web")
 
     # Play the selected song
     spotify.focus(get_player(active_player))
@@ -163,12 +167,20 @@ def run_experiment():
     spotify.pause_song()
     time.sleep(1)
 
-    # TODO: Stop EnergiBridge
+    # Wait for energibridge experiment
+    process.wait()
+
     print("Starting pause ...")
-    # TODO: Start EnerguBridge pause measurement
+
+    # Starting energibridge for the pause
+    output_file_name = f"pause_{i+1}.csv"
+    process = record.run_energibridge(output_file_name, pause_after_song)
 
     # Pause
     time.sleep(pause_after_song)
+
+    # Wait for energibridge pause
+    process.wait()
 
     print("Experiment #", str(i+1), " completed\n")
 
