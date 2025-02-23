@@ -100,9 +100,9 @@ def warm_up():
 # Run the experiment
 def run_experiment():
   # Variables to adapt the experiment
-  plays_per_song = 1          # Number of times each song is played
-  song_play_duration = 5     # The duration a song is played in seconds
-  pause_after_song = 5       # The pause between two songs in seconds
+  plays_per_song = 3          # Number of times each song is played
+  song_play_duration = 60     # The duration a song is played in seconds
+  pause_after_song = 60       # The pause between two songs in seconds
   energibridge_duration = song_play_duration + 2  # Extra time because of sleeps
 
   experiment_start_time = time.time()
