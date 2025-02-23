@@ -82,8 +82,8 @@ def fibonacci(n):
 # The warm-up is done by running a CPU intensive task (fibonacci)
 def warm_up():
   print("Start warm up")
-  # Warm up for 1 minute
-  warm_up_time = 60
+  # Warm up for 5 minutes
+  warm_up_time = 300
   start_time = time.time()
 
   i = 1
