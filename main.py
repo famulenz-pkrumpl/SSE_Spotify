@@ -169,7 +169,7 @@ def run_experiment():
 
 
 # Start the procedure
-# warm_up()
-# init()
+warm_up()
+init()
 run_experiment()
 
