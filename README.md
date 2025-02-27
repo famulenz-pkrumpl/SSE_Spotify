@@ -46,7 +46,7 @@ TODO: explain experiment
 
 ## Execution
 
-The experiment including the warm up can be started by executing the `main.py` file.
+The experiment including the warm-up can be started by executing the `main.py` file with elevated permissions.
 
 ```bash
 py main.py
