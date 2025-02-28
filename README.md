@@ -23,6 +23,8 @@ pip install -r requirements.txt
 
 ## Preparation
 
+At first, the `.env` file should be created and the variables should be set as described in `.env.example`.
+
 Before starting the experiment, make sure that all the following points are fulfilled:
 
 - The device should run for at least 1 hour before the experiment starts
