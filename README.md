@@ -10,7 +10,7 @@ A detailed discussion on the findings of this experiment is available [here](htt
 
 Ensure you have the following dependencies installed:
 
-- EnergyBridge (Setup guide can be found [here](https://github.com/tdurieux/energibridge))
+- EnergiBridge (Setup guide can be found [here](https://github.com/tdurieux/energibridge))
 - Python 3.8+
 - Chrome webbrowser
 - Spotify Desktop App
