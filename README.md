@@ -35,16 +35,22 @@ Before starting the experiment, make sure that all the following points are fulf
 - Switch off auto brightness
 - Disable all enegry saving modes of your device
 - Need to be already logged in on Spotify Web and Desktop application
-  - **Attention**: Since Spotify synchronizes the song that is currently played throughout different devices and apps,yYou need to have to distinct and working Spotify accounts for both Web and Desktop.
+  - **Attention**: Since Spotify synchronizes the song that is currently played throughout different devices and apps, you need to have to distinct and working Spotify accounts for both Web and Desktop.
 - Ensure that the volume in both spotify Web and Desktop is 100%
 - The script will open the default browser, so Chrome should be set as default browser
 - Make sure that the room temperature stay roughly the same during the experiment
 
 ## Experiment Methodology
 
-TODO: explain experiment
+For a more detailed explanation of how the experiment is conducted, please refer to the [article](https://luiscruz.github.io/course_sustainableSE/2025/p1_measuring_software/g25_spotify.html).
 
 ## Execution
+
+Before executing the script, please copy the `.env` file and adjust your seetings.
+
+```bash
+cp .env.example .env
+```
 
 The experiment including the warm up can be started by executing the `main.py` file.
 
