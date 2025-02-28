@@ -10,7 +10,7 @@ A detailed discussion on the findings of this experiment is available [here](htt
 
 Ensure you have the following dependencies installed:
 
-- EnergyBridge (Setup guide can be found [here](https://github.com/tdurieux/energibridge))
+- EnergiBridge (Setup guide can be found [here](https://github.com/tdurieux/energibridge))
 - Python 3.8+
 - Chrome webbrowser
 - Spotify Desktop App
@@ -22,6 +22,8 @@ pip install -r requirements.txt
 ```
 
 ## Preparation
+
+At first, the `.env` file should be created and the variables should be set as described in `.env.example`.
 
 Before starting the experiment, make sure that all the following points are fulfilled:
 
@@ -52,7 +54,7 @@ Before executing the script, please copy the `.env` file and adjust your seeting
 cp .env.example .env
 ```
 
-The experiment including the warm up can be started by executing the `main.py` file.
+The experiment including the warm-up can be started by executing the `main.py` file with elevated permissions.
 
 ```bash
 py main.py
